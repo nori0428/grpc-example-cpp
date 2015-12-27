@@ -3,13 +3,12 @@
 #include <string>
 #include <vector>
 #include <grpc/grpc.h>
-#include <grpc++/channel_arguments.h>
-#include <grpc++/channel_interface.h>
+#include <grpc++/channel.h>
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
-#include <grpc++/status.h>
-#include <grpc++/stream.h>
-#include "customer_service.pb.h"
+#include <grpc++/security/credentials.h>
+#include <grpc++/grpc++.h>
+#include "customer_service.grpc.pb.h"
 
 using namespace proto;
 using namespace grpc;
@@ -18,7 +17,7 @@ int
 main(int argc, char** argv) {
   grpc_init();
   std::unique_ptr<CustomerService::Stub> client = CustomerService::NewStub(
-      grpc::CreateChannelDeprecated("127.0.0.1:11111", ChannelArguments()));
+      grpc::CreateChannel("127.0.0.1:11111", grpc::InsecureChannelCredentials()));
   ClientContext context;
   RequestType request;
   ResponseType response;
@@ -36,7 +35,7 @@ main(int argc, char** argv) {
     }
     status = reader->Finish();
   }
-  if (!status.IsOk()) {
+  if (!status.ok()) {
     std::cout << "ListFeatures rpc failed." << std::endl;
   }
   client.reset();

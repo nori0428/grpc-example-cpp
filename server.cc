@@ -3,12 +3,11 @@
 #include <memory>
 #include <vector>
 #include <grpc/grpc.h>
+#include <grpc++/grpc++.h>
 #include <grpc++/server.h>
 #include <grpc++/server_builder.h>
 #include <grpc++/server_context.h>
-#include <grpc++/status.h>
-#include <grpc++/stream.h>
-#include "customer_service.pb.h"
+#include "customer_service.grpc.pb.h"
 
 using namespace proto;
 using namespace grpc;
@@ -41,7 +40,7 @@ main(int argc, char* argv[]) {
   CustomerServiceImpl service;
 
   ServerBuilder builder;
-  builder.AddPort(server_address);
+  builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
   std::unique_ptr<Server> server(builder.BuildAndStart());
   std::cout << "Server listening on " << server_address << std::endl;

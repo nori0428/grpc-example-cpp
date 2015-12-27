@@ -1,4 +1,4 @@
-GRPC_ROOT = /home/mattn/dev/grpc
+GRPC_ROOT = /Users/kobota/work/grpc
 CFLAGS = -Wall -I$(GRPC_ROOT)/include -I$(GRPC_ROOT)/third_party/protobuf/src -std=c++11
 LDFLAGS = -L$(GRPC_ROOT)/libs/opt -lgrpc++ -lgrpc -lgpr -L$(GRPC_ROOT)/libs/opt/protobuf -lprotobuf
 
@@ -6,11 +6,11 @@ LDFLAGS = -L$(GRPC_ROOT)/libs/opt -lgrpc++ -lgrpc -lgpr -L$(GRPC_ROOT)/libs/opt/
 
 all : client server
 
-client : client.o customer_service.pb.o
-	g++ -o client client.o customer_service.pb.o $(LDFLAGS)
+client : client.o customer_service.pb.o customer_service.grpc.pb.o
+	g++ -o client client.o customer_service.pb.o customer_service.grpc.pb.o $(LDFLAGS)
 
-server : server.o customer_service.pb.o
-	g++ -o server server.o customer_service.pb.o $(LDFLAGS)
+server : server.o customer_service.pb.o customer_service.grpc.pb.o
+	g++ -o server server.o customer_service.pb.o customer_service.grpc.pb.o $(LDFLAGS)
 
 .cc.o :
 	g++ -c $(CFLAGS) -I. $< -o $@
